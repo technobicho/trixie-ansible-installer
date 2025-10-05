@@ -5,9 +5,12 @@ sudo -v || { echo "❌ Se requieren privilegios de administrador."; exit 1; }
 echo "🚀 Iniciando instalación automática de Debian Trixie..."
 
 # Verificar conectividad
-if ! curl -s --head https://deb.debian.org | grep -q "200 OK"; then
+if ! curl -fsI https://deb.debian.org >/dev/null 2?&1; then
   echo "❌ No hay conectividad con deb.debian.org"
+  echo "Por favor verifica tu conexion a Internet"
   exit 1
+else
+  echo "Connectividad confirmada con deb.debian.org."
 fi
 
 # Instalar Ansible si no está
