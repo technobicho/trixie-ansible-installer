@@ -9,8 +9,7 @@ Paquete portable para instalar Window Managers y software en Debian 13 (Trixie) 
 ## Uso (local)
 1. Descomprimir y entrar al directorio:
    ```
-   tar xzf trixie-ansible-installer.tar.gz
-   cd trixie-ansible-installer
+
    chmod +x menu.sh
    ./menu.sh
    ```
