@@ -1,6 +1,0 @@
----
-- name: Instalar lightdm
-  ansible.builtin.apt:
-    name: [lightdm, lightdm-gtk-greeter]
-    state: present
-  when: "display_manager == 'lightdm'"

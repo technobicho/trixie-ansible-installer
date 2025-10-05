@@ -1,0 +1,7 @@
+# Role: window_managers
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Ejecutando window_managers
+      debug:
+        msg: 'window_managers completado.'

@@ -1,0 +1,7 @@
+# Role: clone_dotfiles
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Ejecutando clone_dotfiles
+      debug:
+        msg: 'clone_dotfiles completado.'

@@ -1,6 +1,0 @@
----
-- name: Instalar virt-manager
-  ansible.builtin.apt:
-    name: [virt-manager, libvirt-daemon-system]
-    state: present
-  when: "'virt-manager' in install_apps"

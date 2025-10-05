@@ -1,0 +1,7 @@
+# Role: ansible_install
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Ejecutando ansible_install
+      debug:
+        msg: 'ansible_install completado.'

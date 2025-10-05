@@ -1,0 +1,7 @@
+# Role: prereqs
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Ejecutando prereqs
+      debug:
+        msg: 'prereqs completado.'
