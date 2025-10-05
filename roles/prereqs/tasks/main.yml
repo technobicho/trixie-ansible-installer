@@ -55,7 +55,6 @@
   apt:
     update_cache: yes
 
-handlers:
-  - name: update apt cache
-    apt:
-      update_cache: yes
+- name: update apt cache
+  ansible.builtin.apt:
+     update_cache: yes
