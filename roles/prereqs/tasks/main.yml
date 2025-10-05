@@ -1,8 +1,9 @@
+---
 - name: Compruebo conectividad a deb.debian.org
   ansible.builtin.uri:
     url: https://deb.debian.org
     method: HEAD
-    status_code: 200
+    return_content: no
   register: internet_check
   failed_when: internet_check is failed
 
@@ -28,13 +29,13 @@
   notify: update apt cache
 
 - name: Instalar paquetes básicos (git, dialog, xdg-user-dirs)
-  apt:
+  ansible.builtin.apt:
     name: [git, dialog, xdg-user-dirs, curl, unzip]
     state: present
     update_cache: yes
 
 - name: Crear directorios de usuario necesarios
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: '0755'
@@ -46,15 +47,11 @@
     - "{{ lookup('env','HOME') }}/.local/src"
 
 - name: Crear /usr/local/bin si no existe
-  file:
+  ansible.builtin.file:
     path: /usr/local/bin
     state: directory
     mode: '0755'
 
 - name: Actualizar cache apt
-  apt:
-    update_cache: yes
-
-- name: update apt cache
   ansible.builtin.apt:
-     update_cache: yes
+    update_cache: yes

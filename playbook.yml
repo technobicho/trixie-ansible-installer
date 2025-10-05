@@ -1,4 +1,4 @@
-- name: Instalador Trixie (Ansible)
+- name: Instalador Trixie (Ansible) - fixed
   hosts: "{{ ansible_limit | default('localhost') }}"
   become: true
   vars_files:

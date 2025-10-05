@@ -1,0 +1,11 @@
+install_wms: [bspwm]
+software_pack: "minimo"
+install_apps: [flatpak, nerdfonts-jbm]
+display_manager: ""
+repo_gitlab: "https://gitlab.com/linux-en-casa/trixie-6-wm-en-1.git"
+repo_wallpapers: "https://gitlab.com/linux-en-casa/wallpapers.git"
+zig_version: "zig-x86_64-linux-0.15.1"
+zig_url: "https://ziglang.org/download/0.15.1/zig-x86_64-linux-0.15.1.tar.xz"
+log_file: "{{ lookup('env','HOME') }}/install_log.txt"
+ansible_target: ""
+ansible_limit: "all"

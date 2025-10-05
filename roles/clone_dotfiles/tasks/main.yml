@@ -1,37 +1,47 @@
-- name: Clonar repo de dotfiles (shallow)
+---
+- name: Preparar destino para dotfiles
+  ansible.builtin.file:
+    path: "{{ lookup('env','HOME') }}/.local/src/dotfiles"
+    state: directory
+    mode: '0755'
+    owner: "{{ lookup('env','USER') }}"
+
+- name: Clonar repo de dotfiles si repo_gitlab está definida
   ansible.builtin.git:
     repo: "{{ repo_gitlab }}"
-    dest: "{{ repo_local }}"
+    dest: "{{ lookup('env','HOME') }}/.local/src/dotfiles"
     depth: 1
     force: yes
+  when: repo_gitlab is defined and (repo_gitlab | length) > 0
   register: clone_repo
+  ignore_errors: yes
 
-- name: Copiar dotfiles comunes (nitrogen, rofi, picom.conf)
-  copy:
+- name: Usar dotfiles ejemplo local si no se clonó repo
+  ansible.builtin.copy:
+    src: "files/example-dotfiles/"
+    dest: "{{ lookup('env','HOME') }}/.local/src/dotfiles/"
     remote_src: yes
-    src: "{{ repo_local }}/.config/{{ item }}"
-    dest: "{{ lookup('env','HOME') }}/.config/{{ item }}"
     owner: "{{ lookup('env','USER') }}"
+  when: clone_repo is not defined or clone_repo is failed
+
+- name: Crear /usr/share/wallpapers si no existe
+  ansible.builtin.file:
+    path: /usr/share/wallpapers
+    state: directory
     mode: '0755'
-  loop:
-    - nitrogen
-    - rofi
-    - picom.conf
-  ignore_errors: yes
 
-- name: Copiar wallpapers
-  copy:
-    remote_src: yes
-    src: "{{ repo_local }}/usr/share/wallpapers/debian-bg.png"
+- name: Copiar wallpapers desde dotfiles (si existen)
+  ansible.builtin.copy:
+    src: "{{ lookup('env','HOME') }}/.local/src/dotfiles/wallpapers/debian-bg.png"
     dest: /usr/share/wallpapers/debian-bg.png
-    mode: '0644'
+    remote_src: yes
   ignore_errors: yes
 
-- name: Copiar scripts /usr/local/bin
-  copy:
-    remote_src: yes
-    src: "{{ repo_local }}/usr/local/bin/"
+- name: Copiar scripts /usr/local/bin desde ejemplo
+  ansible.builtin.copy:
+    src: "{{ lookup('env','HOME') }}/.local/src/dotfiles/usr_local_bin/"
     dest: /usr/local/bin/
+    remote_src: yes
     owner: root
     mode: '0755'
   ignore_errors: yes
