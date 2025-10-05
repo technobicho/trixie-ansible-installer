@@ -1,0 +1,37 @@
+- name: Clonar repo de dotfiles (shallow)
+  ansible.builtin.git:
+    repo: "{{ repo_gitlab }}"
+    dest: "{{ repo_local }}"
+    depth: 1
+    force: yes
+  register: clone_repo
+
+- name: Copiar dotfiles comunes (nitrogen, rofi, picom.conf)
+  copy:
+    remote_src: yes
+    src: "{{ repo_local }}/.config/{{ item }}"
+    dest: "{{ lookup('env','HOME') }}/.config/{{ item }}"
+    owner: "{{ lookup('env','USER') }}"
+    mode: '0755'
+  loop:
+    - nitrogen
+    - rofi
+    - picom.conf
+  ignore_errors: yes
+
+- name: Copiar wallpapers
+  copy:
+    remote_src: yes
+    src: "{{ repo_local }}/usr/share/wallpapers/debian-bg.png"
+    dest: /usr/share/wallpapers/debian-bg.png
+    mode: '0644'
+  ignore_errors: yes
+
+- name: Copiar scripts /usr/local/bin
+  copy:
+    remote_src: yes
+    src: "{{ repo_local }}/usr/local/bin/"
+    dest: /usr/local/bin/
+    owner: root
+    mode: '0755'
+  ignore_errors: yes

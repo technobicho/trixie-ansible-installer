@@ -1,0 +1,74 @@
+- name: Instalar paquetes comunes para Xorg WMs
+  apt:
+    name:
+      - adwaita-icon-theme
+      - alsa-utils
+      - arandr
+      - dmenu
+      - dunst
+      - fastfetch
+      - feh
+      - ffmpeg
+      - gvfs
+      - gvfs-backends
+      - lxappearance
+      - lxpolkit
+      - mtp-tools
+      - network-manager-gnome
+      - pavucontrol
+      - picom
+      - picom-conf
+      - playerctl
+      - rofi
+      - sxhkd
+      - terminator
+      - wlogout
+    state: present
+  when: install_wms | length > 0
+
+- name: Instalar bspwm y dependencias
+  apt:
+    name: [bspwm, sxhkd, polybar]
+    state: present
+  when: "'bspwm' in install_wms"
+
+- name: Instalar i3
+  apt:
+    name: [i3-wm, i3status]
+    state: present
+  when: "'i3' in install_wms"
+
+- name: Instalar qtile
+  apt:
+    name: [qtile]
+    state: present
+  when: "'qtile' in install_wms"
+
+- name: Instalar openbox
+  apt:
+    name: [openbox, obconf, tint2]
+    state: present
+  when: "'openbox' in install_wms"
+
+- name: Instalar sway (wayland)
+  apt:
+    name: [sway, waybar, wofi]
+    state: present
+  when: "'sway' in install_wms"
+
+- name: Instalar y compilar dwm/st si fue seleccionado (si hay fuentes)
+  block:
+    - name: Instalar compiladores y dependencias
+      apt:
+        name: [build-essential, libx11-dev, libxft-dev, libxinerama-dev]
+        state: present
+    - name: Copiar fuentes dwm/st desde repo a ~/.local/src
+      command: "cp -r {{ repo_local }}/.local/src/dwm {{ lookup('env','HOME') }}/.local/src/"
+      args:
+        creates: "{{ lookup('env','HOME') }}/.local/src/dwm"
+    - name: make install dwm
+      command: "make clean install"
+      args:
+        chdir: "{{ lookup('env','HOME') }}/.local/src/dwm"
+  when: "'dwm' in install_wms"
+  ignore_errors: yes

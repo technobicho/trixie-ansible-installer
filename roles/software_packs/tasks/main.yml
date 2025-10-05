@@ -1,0 +1,55 @@
+- name: Instalar pack minimo
+  apt:
+    name:
+      - fastfetch
+      - xorg
+      - xterm
+      - xdg-user-dirs
+      - pipewire
+      - pipewire-alsa
+      - pipewire-pulse
+      - wireplumber
+      - alsa-utils
+      - pulseaudio-utils
+      - terminator
+      - desktop-base
+    state: present
+  when: "software_pack == 'minimo'"
+
+- name: Instalar pack basico
+  apt:
+    name:
+      - fastfetch
+      - xorg
+      - xterm
+      - xdg-user-dirs
+      - firefox-esr
+      - thunar
+      - ffmpeg
+      - lxpolkit
+      - mtp-tools
+      - gvfs-backends
+      - gvfs-fuse
+      - xfce4-screenshooter
+      - pavucontrol
+      - synaptic
+    state: present
+  when: "software_pack == 'basico'"
+
+- name: Instalar pack intermedio (agrega algunos extras)
+  apt:
+    name:
+      - libreoffice
+      - mpv
+      - htop
+    state: present
+  when: "software_pack == 'intermedio'"
+
+- name: Instalar pack full (ejemplo)
+  apt:
+    name:
+      - vlc
+      - gimp
+      - remmina
+    state: present
+  when: "software_pack == 'full'"

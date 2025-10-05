@@ -1,0 +1,50 @@
+- name: Instalar virt-manager
+  apt:
+    name: [virt-manager, libvirt-daemon-system, virt-viewer]
+    state: present
+  when: "'virt-manager' in install_apps"
+
+- name: Instalar flatpak y agregar flathub
+  block:
+    - apt:
+        name: [flatpak]
+        state: present
+    - command: flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+      args:
+        warn: false
+  when: "'flatpak' in install_apps"
+
+- name: Instalar cockpit
+  apt:
+    name: [cockpit, cockpit-machines]
+    state: present
+  when: "'cockpit' in install_apps"
+
+- name: Instalar JetBrainsMono Nerd Font (ligero)
+  block:
+    - apt:
+        name: [unzip, fontconfig, curl]
+        state: present
+    - get_url:
+        url: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+        dest: /tmp/JetBrainsMono.zip
+    - unarchive:
+        src: /tmp/JetBrainsMono.zip
+        dest: "{{ lookup('env','HOME') }}/.local/share/fonts/JetBrainsMonoNerd"
+        remote_src: yes
+    - command: fc-cache -f
+  when: "'nerdfonts-jbm' in install_apps"
+
+- name: Instalar todas las Nerd Fonts (pesado)
+  block:
+    - apt:
+        name: [git, unzip, fontconfig, curl]
+        state: present
+    - git:
+        repo: https://github.com/ryanoasis/nerd-fonts.git
+        dest: /tmp/nerd-fonts
+        depth: 1
+    - command: /tmp/nerd-fonts/install.sh
+      args:
+        chdir: /tmp/nerd-fonts
+  when: "'nerdfonts-all' in install_apps"
